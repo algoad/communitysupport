@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "454460998206",
+    "project_id": "community-support-d4e82",
+    "storage_bucket": "community-support-d4e82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454460998206:android:e04d4fa52341716503876f",
+        "android_client_info": {
+          "package_name": "com.chs.communitysupport"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXlxLB_iGQXSOvdx8AexBtNEfQJseT_Dw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
