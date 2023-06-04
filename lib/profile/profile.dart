@@ -4,6 +4,9 @@ import 'package:communitysupport/services/auth.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  // var report = Provider.of<Report>(context);
+  // var user = AuthService().user;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
