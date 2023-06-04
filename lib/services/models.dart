@@ -61,6 +61,24 @@ class Topic {
 }
 
 @JsonSerializable()
+class Alert {
+  late final String id;
+  final String title;
+  final String description;
+  final String date;
+
+  Alert({
+    this.id = '',
+    this.title = '',
+    this.description = '',
+    this.date = '',
+  });
+
+  factory Alert.fromJson(Map<String, dynamic> json) => _$AlertFromJson(json);
+  Map<String, dynamic> toJson() => _$AlertToJson(this);
+}
+
+@JsonSerializable()
 class Report {
   String uid;
   int total;

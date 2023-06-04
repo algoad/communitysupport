@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:communitysupport/login/login.dart';
 import 'package:communitysupport/shared/shared.dart';
-import 'package:communitysupport/topics/topics.dart';
+import 'package:communitysupport/emergency/emergency.dart';
 import 'package:communitysupport/services/auth.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
             child: ErrorMessage(),
           );
         } else if (snapshot.hasData) {
-          return const TopicsScreen();
+          return const EmergencyScreen();
         } else {
           return const LoginScreen();
         }

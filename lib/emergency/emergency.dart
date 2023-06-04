@@ -1,5 +1,5 @@
 import 'package:communitysupport/services/models.dart';
-import 'package:communitysupport/topics/topic_item.dart';
+import 'package:communitysupport/emergency/topic_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,14 +8,14 @@ import 'package:communitysupport/shared/shared.dart';
 import '../services/firestore.dart';
 import 'floating_box.dart';
 
-class TopicsScreen extends StatefulWidget {
-  const TopicsScreen({Key? key}) : super(key: key);
+class EmergencyScreen extends StatefulWidget {
+  const EmergencyScreen({Key? key}) : super(key: key);
 
   @override
   MyTopicsState createState() => MyTopicsState();
 }
 
-class MyTopicsState extends State<TopicsScreen> {
+class MyTopicsState extends State<EmergencyScreen> {
   late GoogleMapController mapController;
   LatLng _center = const LatLng(45.521563, -122.677433);
 

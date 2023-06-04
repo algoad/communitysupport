@@ -17,11 +17,12 @@ class FirestoreService {
     return topics.toList();
   }
 
-  /// Retrieves a single quiz document
-  Future<Quiz> getQuiz(String quizId) async {
-    var ref = _db.collection('quizzes').doc(quizId);
+  Future<List<Alert>> getAlerts() async {
+    var ref = _db.collection('alerts');
     var snapshot = await ref.get();
-    return Quiz.fromJson(snapshot.data() ?? {});
+    var data = snapshot.docs.map((s) => s.data());
+    var alerts = data.map((d) => Alert.fromJson(d));
+    return alerts.toList();
   }
 
   /// Listens to current user's report document in Firestore
