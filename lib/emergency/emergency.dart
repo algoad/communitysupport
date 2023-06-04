@@ -1,11 +1,10 @@
-import 'package:communitysupport/services/models.dart';
 import 'package:communitysupport/emergency/topic_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:communitysupport/shared/shared.dart';
-import '../services/firestore.dart';
+import '../services/models.dart';
 import 'floating_box.dart';
 
 class EmergencyScreen extends StatefulWidget {
@@ -45,55 +44,40 @@ class MyTopicsState extends State<EmergencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Topic>>(
-      future: FirestoreService().getTopics(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoadingScreen();
-        } else if (snapshot.hasError) {
-          return Center(
-            child: ErrorMessage(message: snapshot.error.toString()),
-          );
-        } else if (snapshot.hasData) {
-          var topics = snapshot
-              .data!; // note that we use ! cause we know there are topics in our database
+    Topic topic1 = Topic(title: "CHS", img: "chs.png", number: "041234567");
+    Topic topic2 = Topic(title: "CSG", img: "csg.png", number: "041222222");
+    List<Topic> topics = [topic1, topic2];
 
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.deepPurple,
-              title: const Text('Topics'),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple,
+        title: const Text('Topics'),
+      ),
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _center,
+              zoom: 14.0,
             ),
-            body: Stack(
-              children: [
-                GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: _center,
-                    zoom: 14.0,
-                  ),
-                ),
-                GridView.count(
-                  primary: false,
-                  padding: const EdgeInsets.all(20.0),
-                  crossAxisSpacing: 10.0,
-                  crossAxisCount: 2,
-                  children:
-                      topics.map((topic) => TopicItem(topic: topic)).toList(),
-                ),
-                const FloatingBox(
-                  latitude: 40.7128,
-                  longitude: -74.0060,
-                  address: 'New York, NY',
-                  what3words: 'index.home.raft',
-                ),
-              ],
-            ),
-            bottomNavigationBar: const BottomNavBar(),
-          );
-        } else {
-          return const Text('No topics found in Firestore. Check database');
-        }
-      },
+          ),
+          GridView.count(
+            primary: false,
+            padding: const EdgeInsets.all(20.0),
+            crossAxisSpacing: 10.0,
+            crossAxisCount: 2,
+            children: topics.map((topic) => TopicItem(topic: topic)).toList(),
+          ),
+          const FloatingBox(
+            latitude: 40.7128,
+            longitude: -74.0060,
+            address: 'New York, NY',
+            what3words: 'index.home.raft',
+          ),
+        ],
+      ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

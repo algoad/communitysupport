@@ -43,18 +43,15 @@ class Quiz {
 
 @JsonSerializable()
 class Topic {
-  late final String id;
   final String title;
-  final String description;
   final String img;
-  final List<Quiz> quizzes;
+  final String number;
 
-  Topic(
-      {this.id = '',
-      this.title = '',
-      this.description = '',
-      this.img = 'default.png',
-      this.quizzes = const []});
+  Topic({
+    this.title = '',
+    this.img = 'default.png',
+    this.number = '',
+  });
 
   factory Topic.fromJson(Map<String, dynamic> json) => _$TopicFromJson(json);
   Map<String, dynamic> toJson() => _$TopicToJson(this);
