@@ -20,7 +20,7 @@ class BottomNavBar extends StatelessWidget {
               FontAwesomeIcons.graduationCap,
               size: 20,
             ),
-            label: 'About',
+            label: 'Map',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -34,10 +34,10 @@ class BottomNavBar extends StatelessWidget {
         onTap: (int idx) {
           switch (idx) {
             case 0:
-              // do nothing
+              Navigator.pushNamed(context, '/topics');
               break;
             case 1:
-              Navigator.pushNamed(context, '/about');
+              Navigator.pushNamed(context, '/map');
               break;
             case 2:
               Navigator.pushNamed(context, '/profile');

@@ -17,3 +17,5 @@ samples, guidance on mobile development, and a full API reference.
 
 Run this command to generate json objects
 `flutter pub run build_runner build`
+
+`cd android` and `./gradlew clean build`
