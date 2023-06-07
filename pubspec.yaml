@@ -39,7 +39,7 @@ dependencies:
   firebase_auth: ^4.6.2
   google_fonts: ^5.0.0
   font_awesome_flutter: ^10.4.0
-  google_sign_in: ^5.4.4
+  google_sign_in: ^6.1.4
   sign_in_with_apple: ^4.3.0
   crypto: ^3.0.3
   json_annotation: ^4.8.1
@@ -49,6 +49,7 @@ dependencies:
   geolocator: ^9.0.2
   permission_handler: ^10.2.0
   sliding_up_panel: ^2.0.0+1
+  geocoding: ^2.0.0
 
 dev_dependencies:
   flutter_test:

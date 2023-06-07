@@ -9,7 +9,7 @@ class AlertItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.blueGrey,
+        color: Color.fromARGB(255, 108, 193, 29),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.0),
           topRight: Radius.circular(24.0),

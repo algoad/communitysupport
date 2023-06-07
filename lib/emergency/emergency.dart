@@ -1,5 +1,6 @@
 import 'package:communitysupport/emergency/topic_item.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:communitysupport/shared/shared.dart';
@@ -16,6 +17,8 @@ class EmergencyScreen extends StatefulWidget {
 class MyTopicsState extends State<EmergencyScreen> {
   late GoogleMapController mapController;
   LatLng _center = const LatLng(-33.886, 151.27);
+  final Set<Marker> _markers = {};
+  String _currentAddress = '';
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -23,13 +26,8 @@ class MyTopicsState extends State<EmergencyScreen> {
   }
 
   Future<void> _getCurrentUserLocation() async {
-    // PermissionStatus permission = await Permission.locationWhenInUse.status;
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (serviceEnabled) {
-      // Position position = await Geolocator.getCurrentPosition(
-      //   desiredAccuracy: LocationAccuracy.high,
-      // );
-
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -43,6 +41,8 @@ class MyTopicsState extends State<EmergencyScreen> {
             'Location permissions are permanetly denined, we cannot request');
       }
       Position currentPosition = await Geolocator.getCurrentPosition();
+      _updateAddress(currentPosition.latitude, currentPosition.longitude);
+
       setState(() {
         _center = LatLng(currentPosition.latitude, currentPosition.longitude);
         mapController.animateCamera(
@@ -53,10 +53,26 @@ class MyTopicsState extends State<EmergencyScreen> {
                 zoom: 17.0),
           ),
         );
+        _markers.add(
+          Marker(
+            markerId: const MarkerId('1'), // Unique id for marker
+            position: LatLng(currentPosition.latitude,
+                currentPosition.longitude), // lat and long for the marker
+          ),
+        );
       });
     } else {
       return Future.error('Location services are disabled');
     }
+  }
+
+  Future<void> _updateAddress(double latitude, double longitude) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+    Placemark place = placemarks[0];
+    setState(() {
+      _currentAddress = "${place.street}, ${place.locality}, ${place.country}";
+    });
   }
 
   @override
@@ -74,6 +90,7 @@ class MyTopicsState extends State<EmergencyScreen> {
         children: [
           GoogleMap(
             onMapCreated: _onMapCreated,
+            markers: _markers,
             initialCameraPosition: CameraPosition(
               target: _center,
               zoom: 14.0,
@@ -86,10 +103,10 @@ class MyTopicsState extends State<EmergencyScreen> {
             crossAxisCount: 2,
             children: topics.map((topic) => TopicItem(topic: topic)).toList(),
           ),
-          const FloatingBox(
+          FloatingBox(
             latitude: 40.7128,
             longitude: -74.0060,
-            address: 'New York, NY',
+            address: _currentAddress,
             what3words: 'index.home.raft',
           ),
         ],
