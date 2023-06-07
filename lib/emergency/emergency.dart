@@ -2,7 +2,6 @@ import 'package:communitysupport/emergency/topic_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:communitysupport/shared/shared.dart';
 import '../services/models.dart';
 import 'floating_box.dart';
@@ -16,7 +15,7 @@ class EmergencyScreen extends StatefulWidget {
 
 class MyTopicsState extends State<EmergencyScreen> {
   late GoogleMapController mapController;
-  LatLng _center = const LatLng(45.521563, -122.677433);
+  LatLng _center = const LatLng(-33.886, 151.27);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -24,21 +23,39 @@ class MyTopicsState extends State<EmergencyScreen> {
   }
 
   Future<void> _getCurrentUserLocation() async {
-    PermissionStatus permission = await Permission.locationWhenInUse.status;
-    if (permission.isGranted) {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+    // PermissionStatus permission = await Permission.locationWhenInUse.status;
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (serviceEnabled) {
+      // Position position = await Geolocator.getCurrentPosition(
+      //   desiredAccuracy: LocationAccuracy.high,
+      // );
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return Future.error('Location permissions are denied');
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return Future.error(
+            'Location permissions are permanetly denined, we cannot request');
+      }
+      Position currentPosition = await Geolocator.getCurrentPosition();
       setState(() {
-        _center = LatLng(position.latitude, position.longitude);
+        _center = LatLng(currentPosition.latitude, currentPosition.longitude);
         mapController.animateCamera(
           CameraUpdate.newCameraPosition(
-            CameraPosition(target: _center, zoom: 11.0),
+            CameraPosition(
+                target:
+                    LatLng(currentPosition.latitude, currentPosition.longitude),
+                zoom: 17.0),
           ),
         );
       });
-    } else if (permission.isDenied) {
-      print("PERMISSION DENINED");
+    } else {
+      return Future.error('Location services are disabled');
     }
   }
 

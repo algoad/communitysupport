@@ -42,6 +42,7 @@ class _AppState extends State<App> {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
+          print("Whats going on");
           print(snapshot.error);
           return const Directionality(
             textDirection: TextDirection.ltr,

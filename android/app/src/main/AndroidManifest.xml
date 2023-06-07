@@ -5,7 +5,7 @@
 
     <application
         android:label="communitysupport"
-        android:name="${applicationName}"
+        android:name="communitysupport"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -23,6 +23,8 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <meta-data android:name="com.google.android.geo.API_KEY"
+              android:value="AIzaSyAXlxLB_iGQXSOvdx8AexBtNEfQJseT_Dw"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
