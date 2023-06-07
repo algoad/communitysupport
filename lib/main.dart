@@ -42,7 +42,13 @@ class _AppState extends State<App> {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return const Text('error');
+          print(snapshot.error);
+          return const Directionality(
+            textDirection: TextDirection.ltr,
+            child: Center(
+              child: Text("error"),
+            ),
+          );
         }
 
         // Once complete, show your application
