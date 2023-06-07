@@ -11,10 +11,10 @@ class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({Key? key}) : super(key: key);
 
   @override
-  MyTopicsState createState() => MyTopicsState();
+  MyEmergencyState createState() => MyEmergencyState();
 }
 
-class MyTopicsState extends State<EmergencyScreen> {
+class MyEmergencyState extends State<EmergencyScreen> {
   late GoogleMapController mapController;
   LatLng _center = const LatLng(-33.886, 151.27);
   final Set<Marker> _markers = {};
@@ -104,8 +104,8 @@ class MyTopicsState extends State<EmergencyScreen> {
             children: topics.map((topic) => TopicItem(topic: topic)).toList(),
           ),
           FloatingBox(
-            latitude: 40.7128,
-            longitude: -74.0060,
+            latitude: _center.latitude,
+            longitude: _center.longitude,
             address: _currentAddress,
             what3words: 'index.home.raft',
           ),
