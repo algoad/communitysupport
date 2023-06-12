@@ -128,7 +128,6 @@ class TopicScreen extends StatelessWidget {
 
   void _launchURL(String? uri) async {
     if (uri != null) {
-      print("babsi$uri");
       Uri url = Uri.parse("tel:$uri");
       if (await canLaunchUrl(url)) {
         await launchUrl(url);

@@ -44,8 +44,9 @@ class FloatingBox extends StatelessWidget {
                 child: Text(
                   'Tell the operator your location',
                   style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.black, // Set the text color to black
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red, // Set the text color to black
                   ),
                 ),
               ),
@@ -65,6 +66,7 @@ class FloatingBox extends StatelessWidget {
                                 'Lat: ',
                                 style: TextStyle(
                                   fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
                                   color: Colors
                                       .black, // Set the text color to black
                                 ),
@@ -89,6 +91,7 @@ class FloatingBox extends StatelessWidget {
                               const Text(
                                 'Long: ',
                                 style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16.0,
                                   color: Colors
                                       .black, // Set the text color to black
@@ -119,6 +122,7 @@ class FloatingBox extends StatelessWidget {
                             'What3Words',
                             style: TextStyle(
                               fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
                               color:
                                   Colors.black, // Set the text color to black
                             ),
@@ -142,13 +146,40 @@ class FloatingBox extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8.0),
-              Text(
-                'Address: $address',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black, // Set the text color to black
-                ),
-                textAlign: TextAlign.center,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Divider(
+                    color: Colors.black,
+                    height: 8,
+                    thickness: 1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Address: ',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.end,
+                      ),
+                      Expanded(
+                        child: Text(
+                          address,
+                          maxLines: 2,
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
