@@ -53,15 +53,17 @@ Map<String, dynamic> _$QuizToJson(Quiz instance) => <String, dynamic>{
     };
 
 Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
-      title: json['title'] as String? ?? '',
-      img: json['img'] as String? ?? 'default.png',
-      number: json['number'] as String? ?? '',
+      title: json['title'] as String,
+      img: json['img'] as String,
+      number: json['number'] as String,
+      website: json['website'] as String?,
     );
 
 Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
       'title': instance.title,
       'img': instance.img,
       'number': instance.number,
+      'website': instance.website,
     };
 
 Alert _$AlertFromJson(Map<String, dynamic> json) => Alert(

@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:communitysupport/shared/shared.dart';
 import '../services/models.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'floating_box.dart';
 
 class EmergencyScreen extends StatefulWidget {
@@ -23,6 +24,15 @@ class MyEmergencyState extends State<EmergencyScreen> {
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     _getCurrentUserLocation();
+  }
+
+  void _launchURL(String phoneNumber) async {
+    Uri url = Uri.parse("tel:$phoneNumber");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Future<void> _getCurrentUserLocation() async {
@@ -78,7 +88,11 @@ class MyEmergencyState extends State<EmergencyScreen> {
   @override
   Widget build(BuildContext context) {
     Topic topic1 = Topic(title: "CHS", img: "chs.png", number: "041234567");
-    Topic topic2 = Topic(title: "CSG", img: "csg.png", number: "041222222");
+    Topic topic2 = Topic(
+        title: "CSG",
+        img: "csg.png",
+        number: "041222222",
+        website: 'www.google.com');
     List<Topic> topics = [topic1, topic2];
 
     return Scaffold(
@@ -108,6 +122,32 @@ class MyEmergencyState extends State<EmergencyScreen> {
             longitude: _center.longitude,
             address: _currentAddress,
             what3words: 'index.home.raft',
+          ),
+          Positioned(
+            bottom: 190, //position from the bottom
+            left: 20, //position from the left
+            right: 20, //position from the right
+            child: GestureDetector(
+              onTap: () {
+                _launchURL('000');
+              },
+              child: Container(
+                padding: const EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  color: Colors.red, // red background
+                  borderRadius: BorderRadius.circular(10), // rounded corners
+                ),
+                child: const Text(
+                  'Call 000',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
           ),
         ],
       ),

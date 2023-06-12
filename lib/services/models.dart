@@ -46,11 +46,13 @@ class Topic {
   final String title;
   final String img;
   final String number;
+  final String? website;
 
   Topic({
-    this.title = '',
-    this.img = 'default.png',
-    this.number = '',
+    required this.title,
+    required this.img,
+    required this.number,
+    this.website, // This makes website optional without a default value
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) => _$TopicFromJson(json);
