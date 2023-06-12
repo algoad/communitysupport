@@ -16,7 +16,9 @@ class AlertsScreenState extends State<AlertsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(
+        currentPage: 1,
+      ),
       body: FutureBuilder<List<Alert>>(
         future: FirestoreService().getAlerts(),
         builder: (context, snapshot) {

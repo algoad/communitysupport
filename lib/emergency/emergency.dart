@@ -151,7 +151,9 @@ class MyEmergencyState extends State<EmergencyScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(
+        currentPage: 0,
+      ),
     );
   }
 }
