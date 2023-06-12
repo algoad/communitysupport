@@ -70,57 +70,6 @@ class TopicItem extends StatelessWidget {
   }
 }
 
-// class TopicScreen extends StatelessWidget {
-//   final Topic topic;
-
-//   const TopicScreen({super.key, required this.topic});
-
-//   void _launchURL(String phoneNumber) async {
-//     Uri url = Uri.parse("tel:$phoneNumber");
-//     if (await canLaunchUrl(url)) {
-//       await launchUrl(url);
-//     } else {
-//       throw 'Could not launch $url';
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.transparent,
-//       ),
-//       body: ListView(
-//         children: [
-//           Hero(
-//             tag: topic.img,
-//             child: Image.asset(
-//               'assets/covers/${topic.img}',
-//               width: MediaQuery.of(context).size.width,
-//             ),
-//           ),
-//           InkWell(
-//             onTap: () {
-//               _launchURL(
-//                   'tel:${topic.number}'); // This initiates the phone call on tap
-//             },
-//             child: Text(
-//               'Call ${topic.title}',
-//               textAlign: TextAlign.center, // This centers the text
-//               style: const TextStyle(
-//                 color: Colors.blue, // This makes the text blue
-//                 fontSize: 20, // This makes the font larger
-//                 decoration:
-//                     TextDecoration.underline, // This underlines the text
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class TopicScreen extends StatelessWidget {
   final Topic topic;
 
