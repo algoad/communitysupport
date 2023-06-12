@@ -7,6 +7,7 @@ import 'package:communitysupport/shared/shared.dart';
 import '../services/models.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'floating_box.dart';
+import 'package:what3words/what3words.dart';
 
 class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
   LatLng _center = const LatLng(-33.886, 151.27);
   final Set<Marker> _markers = {};
   String _currentAddress = '';
+  String _what3words = '';
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -36,6 +38,8 @@ class MyEmergencyState extends State<EmergencyScreen> {
   }
 
   Future<void> _getCurrentUserLocation() async {
+    var api = What3WordsV3('YUCRNHX7');
+
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (serviceEnabled) {
       LocationPermission permission = await Geolocator.checkPermission();
@@ -52,6 +56,16 @@ class MyEmergencyState extends State<EmergencyScreen> {
       }
       Position currentPosition = await Geolocator.getCurrentPosition();
       _updateAddress(currentPosition.latitude, currentPosition.longitude);
+
+      var words = await api
+          .convertTo3wa(
+              Coordinates(currentPosition.latitude, currentPosition.longitude))
+          .language('en')
+          .execute();
+
+      setState(() {
+        _what3words = words.data()!.words;
+      });
 
       setState(() {
         _center = LatLng(currentPosition.latitude, currentPosition.longitude);
@@ -98,7 +112,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
-        title: const Text('Topics'),
+        title: const Text('Emergency'),
       ),
       body: Stack(
         children: [
@@ -121,7 +135,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
             latitude: _center.latitude,
             longitude: _center.longitude,
             address: _currentAddress,
-            what3words: 'index.home.raft',
+            what3words: _what3words,
           ),
           Positioned(
             bottom: 190, //position from the bottom

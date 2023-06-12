@@ -37,7 +37,7 @@ dependencies:
   firebase_core: ^2.13.1
   cloud_firestore: ^4.8.0
   firebase_auth: ^4.6.2
-  google_fonts: ^5.0.0
+  google_fonts: 4.0.2
   font_awesome_flutter: ^10.4.0
   google_sign_in: ^6.1.4
   sign_in_with_apple: ^4.3.0
@@ -51,6 +51,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   geocoding: ^2.0.0
   url_launcher: ^6.0.10
+  what3words: 3.1.0
 
 dev_dependencies:
   flutter_test:
