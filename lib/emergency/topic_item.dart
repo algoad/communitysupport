@@ -9,7 +9,8 @@ class TopicItem extends StatelessWidget {
 
   void _launchURL(String? uri) async {
     if (uri != null) {
-      Uri url = Uri.parse(uri);
+      Uri url = Uri.parse("tel:$uri");
+      // Uri url = Uri.parse(uri);
       if (await canLaunchUrl(url)) {
         await launchUrl(url);
       } else {

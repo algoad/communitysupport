@@ -102,11 +102,11 @@ class MyEmergencyState extends State<EmergencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Topic topic1 = Topic(title: "CHS", img: "chs.png", number: "041234567");
+    Topic topic1 = Topic(title: "CHS", img: "chs.png", number: "0432577179");
     Topic topic2 = Topic(
         title: "CSG",
         img: "csg.png",
-        number: "041222222",
+        number: "0432577178",
         website: 'www.google.com');
     List<Topic> topics = [topic1, topic2];
 
