@@ -4,7 +4,19 @@ import 'package:url_launcher/url_launcher.dart'; // import url_launcher
 
 class TopicItem extends StatelessWidget {
   final Topic topic;
-  const TopicItem({super.key, required this.topic});
+
+  const TopicItem({Key? key, required this.topic}) : super(key: key);
+
+  void _launchURL(String? uri) async {
+    if (uri != null) {
+      Uri url = Uri.parse(uri);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +31,38 @@ class TopicItem extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => TopicScreen(topic: topic),
-                ),
-              );
+              if (topic.website != null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Choose an Option'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                              _launchURL(topic.number);
+                            },
+                            child: const Text('Call'),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                              _launchURL(topic.website);
+                            },
+                            child: const Text('Open Website'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                _launchURL(topic.number);
+              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
