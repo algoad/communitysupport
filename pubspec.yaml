@@ -53,6 +53,7 @@ dependencies:
   url_launcher: ^6.0.10
   what3words: 3.1.0
   shared_preferences: 2.1.2
+  firebase_messaging: ^14.6.3
 
 dev_dependencies:
   flutter_test:
