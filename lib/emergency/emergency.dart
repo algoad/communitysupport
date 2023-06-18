@@ -4,6 +4,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:communitysupport/shared/shared.dart';
+import '../services/auth.dart';
 import '../services/models.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'floating_box.dart';
@@ -113,6 +114,18 @@ class MyEmergencyState extends State<EmergencyScreen> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         title: const Text('Emergency'),
+        actions: <Widget>[
+          ElevatedButton(
+            child: const Text('Logout'),
+            onPressed: () async {
+              await AuthService().signOut();
+              if (mounted) {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/', (route) => false);
+              }
+            },
+          ),
+        ],
       ),
       body: Stack(
         children: [

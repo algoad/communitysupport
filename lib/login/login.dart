@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../services/auth.dart';
+import '../services/firestore.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  LoginScreenState createState() => LoginScreenState();
+}
+
+class LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  String _name = '';
+  String _phoneNumber = '';
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +28,47 @@ class LoginScreen extends StatelessWidget {
             const FlutterLogo(
               size: 150,
             ),
-            Flexible(
-              child: LoginButton(
-                icon: FontAwesomeIcons.userNinja,
-                text: 'Continue as Guest',
-                loginMethod: AuthService().anonLogin,
-                color: Colors.deepPurple,
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your full name',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your full name';
+                      }
+                      _name = value;
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your mobile number',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your mobile number';
+                      }
+                      _phoneNumber = value;
+                      return null;
+                    },
+                  ),
+                  LoginButton(
+                    icon: FontAwesomeIcons.userNinja,
+                    text: 'login',
+                    loginMethod: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await AuthService().anonLogin();
+                        await FirestoreService()
+                            .updateUserData(_name, _phoneNumber);
+                      }
+                    },
+                    color: Colors.deepPurple,
+                  ),
+                ],
               ),
             ),
           ],

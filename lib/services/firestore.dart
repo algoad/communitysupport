@@ -37,17 +37,12 @@ class FirestoreService {
     });
   }
 
-  /// Updates the current user's report document after completing quiz
-  Future<void> updateUserReport(Quiz quiz) {
+  /// Updates the current user's data in the userData collection
+  Future<void> updateUserData(String name, String phoneNumber) {
     var user = AuthService().user!;
-    var ref = _db.collection('reports').doc(user.uid);
+    var ref = _db.collection('userData').doc(user.uid);
 
-    var data = {
-      'total': FieldValue.increment(1),
-      'topics': {
-        quiz.topic: FieldValue.arrayUnion([quiz.id])
-      }
-    };
+    var data = {'name': name, 'phoneNumber': phoneNumber};
 
     return ref.set(data, SetOptions(merge: true));
   }
