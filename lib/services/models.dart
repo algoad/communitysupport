@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 part 'models.g.dart';
 
 @JsonSerializable()
@@ -86,4 +89,27 @@ class Report {
   Report({this.uid = '', this.topics = const {}, this.total = 0});
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
+}
+
+class UserDataProvider with ChangeNotifier {
+  String name = '';
+  String phoneNumber = '';
+
+  // Initialize the values from SharedPreferences
+  void loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    name = prefs.getString('name') ?? '';
+    phoneNumber = prefs.getString('phoneNumber') ?? '';
+    notifyListeners();
+  }
+
+  // Save the name and phone number to both provider and SharedPreferences
+  void saveData(String newName, String newPhoneNumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    name = newName;
+    phoneNumber = newPhoneNumber;
+    prefs.setString('name', name);
+    prefs.setString('phoneNumber', phoneNumber);
+    notifyListeners();
+  }
 }

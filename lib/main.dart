@@ -9,7 +9,12 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const App());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserDataProvider(),
+      child: const App(),
+    ),
+  );
 }
 
 /// We are using a StatefulWidget such that we only create the [Future] once,
@@ -42,8 +47,6 @@ class _AppState extends State<App> {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          print("Whats going on");
-          print(snapshot.error);
           return const Directionality(
             textDirection: TextDirection.ltr,
             child: Center(

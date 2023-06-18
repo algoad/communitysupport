@@ -46,4 +46,11 @@ class FirestoreService {
 
     return ref.set(data, SetOptions(merge: true));
   }
+
+  Future<void> deleteUserData() {
+    var user = AuthService().user!;
+    var ref = _db.collection('userData').doc(user.uid);
+
+    return ref.delete();
+  }
 }

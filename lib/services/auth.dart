@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'firestore.dart';
+
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
   final user = FirebaseAuth.instance.currentUser;
@@ -14,6 +16,7 @@ class AuthService {
   }
 
   Future<void> signOut() async {
+    await FirestoreService().deleteUserData();
     await FirebaseAuth.instance.signOut();
   }
 
