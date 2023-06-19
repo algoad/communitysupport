@@ -87,7 +87,7 @@ class AlertsScreenState extends State<AlertsScreen> {
             );
           } else {
             return const Center(
-              child: Text('No alerts found in Firestore. Check database'),
+              child: Text('No alerts'),
             );
           }
         },

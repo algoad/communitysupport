@@ -34,10 +34,10 @@ class BottomNavBar extends StatelessWidget {
         }
         switch (idx) {
           case 0:
-            Navigator.pushNamed(context, '/emergency');
+            Navigator.pushReplacementNamed(context, '/emergency');
             break;
           case 1:
-            Navigator.pushNamed(context, '/alerts');
+            Navigator.pushReplacementNamed(context, '/alerts');
             break;
         }
       },

@@ -25,8 +25,11 @@ class LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const FlutterLogo(
-              size: 150,
+            SizedBox(
+              child: Image.asset(
+                'assets/covers/chs_full.png',
+                fit: BoxFit.contain,
+              ),
             ),
             Form(
               key: _formKey,
@@ -58,8 +61,11 @@ class LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
+                  const Padding(
+                    padding: EdgeInsets.all(10.0), // adjust the value as needed
+                  ),
                   LoginButton(
-                    icon: FontAwesomeIcons.userNinja,
+                    icon: FontAwesomeIcons.arrowRight,
                     text: 'Login',
                     loginMethod: () async {
                       if (_formKey.currentState!.validate()) {
@@ -87,12 +93,13 @@ class LoginButton extends StatelessWidget {
   final String text;
   final Function loginMethod;
 
-  const LoginButton(
-      {super.key,
-      required this.text,
-      required this.icon,
-      required this.color,
-      required this.loginMethod});
+  const LoginButton({
+    Key? key,
+    required this.text,
+    required this.icon,
+    required this.color,
+    required this.loginMethod,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +111,16 @@ class LoginButton extends StatelessWidget {
           color: Colors.white,
           size: 20,
         ),
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.all(24),
-          backgroundColor: color,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+          padding: MaterialStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20), // border radius
+            ),
+          ),
         ),
         onPressed: () => loginMethod(),
         label: Text(text, textAlign: TextAlign.center),

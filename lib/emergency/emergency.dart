@@ -112,11 +112,12 @@ class MyEmergencyState extends State<EmergencyScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
         title: const Text('Emergency'),
         actions: <Widget>[
-          ElevatedButton(
-            child: const Text('Logout'),
+          TextButton(
+            child: const Text('Logout', style: TextStyle(color: Colors.white)),
             onPressed: () async {
               await AuthService().signOut();
               if (mounted) {

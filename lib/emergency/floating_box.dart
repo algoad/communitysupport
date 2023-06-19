@@ -146,40 +146,44 @@ class FloatingBox extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8.0),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Divider(
-                    color: Colors.black,
-                    height: 8,
-                    thickness: 1,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Address: ',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.end,
-                      ),
-                      Expanded(
-                        child: Text(
-                          address,
-                          maxLines: 2,
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.black,
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Divider(
+                      color: Colors.black,
+                      height: 8,
+                      thickness: 1,
+                    ),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 50),
+                      child: SingleChildScrollView(
+                        child: Center(
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.black,
+                              ),
+                              children: <TextSpan>[
+                                const TextSpan(
+                                  text: 'Your location: ',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text: address,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ],
+                            ),
                           ),
-                          textAlign: TextAlign.start,
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
