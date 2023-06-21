@@ -46,11 +46,13 @@ class _AppState extends State<App> {
       future: _initialization,
       builder: (context, snapshot) {
         // Check for errors
+
         if (snapshot.hasError) {
-          return const Directionality(
+          print(snapshot.error?.toString());
+          return Directionality(
             textDirection: TextDirection.ltr,
             child: Center(
-              child: Text("error"),
+              child: Text('Error: ${snapshot.error?.toString()}'),
             ),
           );
         }
