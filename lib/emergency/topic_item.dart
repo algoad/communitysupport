@@ -69,8 +69,9 @@ class TopicItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Flexible(
-                  flex: 3,
-                  child: SizedBox(
+                  flex: 2,
+                  child: Container(
+                    color: const Color.fromARGB(255, 30, 50, 97),
                     child: Image.asset(
                       'assets/covers/${topic.img}',
                       fit: BoxFit.contain,
@@ -80,22 +81,22 @@ class TopicItem extends StatelessWidget {
                 Flexible(
                   flex: 1,
                   child: Container(
-                    color: Colors.red, // This adds the red background
+                    color: const Color.fromARGB(255, 30, 50, 97),
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: Center(
                         child: Text(
                           topic.title,
                           textAlign: TextAlign.center,
+                          maxLines: 2, // Set maximum lines to 2
+                          overflow: TextOverflow
+                              .ellipsis, // Add an ellipsis when the text overflows
                           style: const TextStyle(
-                            color: Colors
-                                .white, // Changing the text color to white for visibility
+                            color: Colors.white,
                             height: 1.0,
-                            fontSize: 20,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
                         ),
                       ),
                     ),
