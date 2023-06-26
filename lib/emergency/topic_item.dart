@@ -23,81 +23,97 @@ class TopicItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: topic.img,
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () {
-            if (topic.website != null) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Choose an Option'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                            _launchURL(topic.number);
-                          },
-                          child: const Text('Call'),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                            _launchURL(topic.website);
-                          },
-                          child: const Text('Open Website'),
-                        ),
-                      ],
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0), // corner radius
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: InkWell(
+            onTap: () {
+              if (topic.website != null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Choose an Option'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                              _launchURL(topic.number);
+                            },
+                            child: const Text('Call'),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                              _launchURL(topic.website);
+                            },
+                            child: const Text('Open Website'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                _launchURL(topic.number);
+              }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    color: const Color.fromARGB(255, 30, 50, 97),
+                    child: Image.asset(
+                      'assets/covers/${topic.img}',
+                      fit: BoxFit.contain,
                     ),
-                  );
-                },
-              );
-            } else {
-              _launchURL(topic.number);
-            }
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Flexible(
-                flex: 2,
-                child: Container(
-                  color: const Color.fromARGB(255, 30, 50, 97),
-                  child: Image.asset(
-                    'assets/covers/${topic.img}',
-                    fit: BoxFit.contain,
                   ),
                 ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Container(
-                  color: const Color.fromARGB(255, 30, 50, 97),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Center(
-                      child: Text(
-                        topic.title,
-                        textAlign: TextAlign.center,
-                        maxLines: 2, // Set maximum lines to 2
-                        overflow: TextOverflow
-                            .ellipsis, // Add an ellipsis when the text overflows
-                        style: const TextStyle(
-                          color: Colors.white,
-                          height: 1.0,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    color: const Color.fromARGB(255, 30, 50, 97),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Center(
+                        child: Text(
+                          topic.title,
+                          textAlign: TextAlign.center,
+                          maxLines: 2, // Set maximum lines to 2
+                          overflow: TextOverflow
+                              .ellipsis, // Add an ellipsis when the text overflows
+                          style: const TextStyle(
+                            color: Colors.white,
+                            height: 1.0,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

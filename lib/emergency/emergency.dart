@@ -6,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:communitysupport/shared/shared.dart';
 import '../services/auth.dart';
 import '../services/models.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'floating_box.dart';
 
 class EmergencyScreen extends StatefulWidget {
@@ -21,20 +20,10 @@ class MyEmergencyState extends State<EmergencyScreen> {
   LatLng _center = const LatLng(-33.886, 151.27);
   final Set<Marker> _markers = {};
   String _currentAddress = '';
-  final String _what3words = '';
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     _getCurrentUserLocation();
-  }
-
-  void _launchURL(String phoneNumber) async {
-    Uri url = Uri.parse("tel:$phoneNumber");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   Future<void> _getCurrentUserLocation() async {
@@ -103,7 +92,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color.fromARGB(255, 30, 50, 97),
         title: const Text('Emergency'),
         actions: <Widget>[
           TextButton(

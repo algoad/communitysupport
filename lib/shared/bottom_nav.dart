@@ -8,39 +8,50 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(
-            FontAwesomeIcons.kitMedical,
-            size: 20,
+    return ClipRRect(
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed, // Show labels all the time
+        showSelectedLabels: true, // Show selected label
+        showUnselectedLabels: true, // Show unselected labels
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.kitMedical,
+              size: 20,
+              color: Color.fromRGBO(4, 15, 57, 1),
+            ),
+            label: 'EMERGENCY',
           ),
-          label: 'Emergency',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            FontAwesomeIcons.bolt,
-            size: 20,
+          BottomNavigationBarItem(
+            icon: Icon(
+              FontAwesomeIcons.bell,
+              size: 20,
+              color: Color.fromRGBO(4, 15, 57, 1),
+            ),
+            label: 'ALERTS',
           ),
-          label: 'Alerts',
-        ),
-      ],
-      currentIndex: currentPage,
-      fixedColor: Colors.deepPurple[200],
-      onTap: (int idx) {
-        if (idx == currentPage) {
-          // Do nothing if the tapped icon is for the current page.
-          return;
-        }
-        switch (idx) {
-          case 0:
-            Navigator.pushReplacementNamed(context, '/emergency');
-            break;
-          case 1:
-            Navigator.pushReplacementNamed(context, '/alerts');
-            break;
-        }
-      },
+        ],
+        currentIndex: currentPage,
+        selectedItemColor:
+            const Color.fromRGBO(4, 15, 57, 1), // Color for selected item
+        unselectedItemColor:
+            const Color.fromRGBO(4, 15, 57, 1), // Color for unselected items
+        onTap: (int idx) {
+          if (idx == currentPage) {
+            // Do nothing if the tapped icon is for the current page.
+            return;
+          }
+          switch (idx) {
+            case 0:
+              Navigator.pushReplacementNamed(context, '/emergency');
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/alerts');
+              break;
+          }
+        },
+      ),
     );
   }
 }

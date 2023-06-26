@@ -11,77 +11,89 @@ class FloatingBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 0,
+      bottom: 20,
       left: 0,
       right: 0,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          height: 100.0,
-          decoration: BoxDecoration(
-            color: Colors.white, // Set the background color to white
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  'Tell the operator your location',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red, // Set the text color to black
+        padding: const EdgeInsets.all(20.0),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            const maxHeight = 100.0;
+            final addressTextHeight =
+                calculateAddressTextHeight(constraints.maxWidth);
+            final boxHeight = addressTextHeight + 40.0;
+
+            return Container(
+              height: boxHeight > maxHeight ? maxHeight : boxHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
                   ),
-                ),
+                ],
               ),
-              const SizedBox(height: 8.0),
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 50),
-                      child: SingleChildScrollView(
-                        child: Center(
-                          child: RichText(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Tell the operator your location',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8.0),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 8.0,
+                            right: 8.0,
+                            bottom: 8.0,
+                          ),
+                          child: Text(
+                            'Near: $address',
                             textAlign: TextAlign.center,
-                            text: TextSpan(
-                              style: const TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.black,
-                              ),
-                              children: <TextSpan>[
-                                const TextSpan(
-                                  text: 'near: ',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                TextSpan(
-                                  text: address,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.normal),
-                                ),
-                              ],
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
+  }
+
+  double calculateAddressTextHeight(double maxWidth) {
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: 'Near: $address',
+        style: const TextStyle(
+          fontSize: 16.0,
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
+      maxLines: null,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: maxWidth - 32.0); // Subtract padding from maxWidth
+
+    return textPainter.height;
   }
 }
