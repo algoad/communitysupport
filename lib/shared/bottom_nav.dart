@@ -17,7 +17,7 @@ class BottomNavBar extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              FontAwesomeIcons.kitMedical,
+              FontAwesomeIcons.phone,
               size: 20,
               color: Color.fromRGBO(4, 15, 57, 1),
             ),
