@@ -36,7 +36,10 @@ class BottomNavBar extends StatelessWidget {
         selectedItemColor:
             const Color.fromRGBO(4, 15, 57, 1), // Color for selected item
         unselectedItemColor:
-            const Color.fromRGBO(4, 15, 57, 1), // Color for unselected items
+            const Color.fromRGBO(220, 220, 220, 1), // Color for selected item
+        selectedIconTheme: const IconThemeData(
+          color: Colors.white, // Set the fill color for selected icon
+        ),
         onTap: (int idx) {
           if (idx == currentPage) {
             // Do nothing if the tapped icon is for the current page.
