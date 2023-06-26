@@ -154,32 +154,6 @@ class MyEmergencyState extends State<EmergencyScreen> {
             address: _currentAddress,
             what3words: _what3words,
           ),
-          Positioned(
-            bottom: 190, //position from the bottom
-            left: 20, //position from the left
-            right: 20, //position from the right
-            child: GestureDetector(
-              onTap: () {
-                _launchURL('000');
-              },
-              child: Container(
-                padding: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Colors.red, // red background
-                  borderRadius: BorderRadius.circular(10), // rounded corners
-                ),
-                child: const Text(
-                  'Call 000',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ),
         ],
       ),
       bottomNavigationBar: const BottomNavBar(

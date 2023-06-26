@@ -27,7 +27,6 @@ class FloatingBox extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white, // Set the background color to white
             borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(color: Colors.red), // Add a red border
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
