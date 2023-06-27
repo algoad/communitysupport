@@ -46,13 +46,14 @@ dependencies:
   rxdart: ^0.27.7
   google_maps_flutter: ^2.0.6
   geolocator: ^9.0.2
-  permission_handler: ^10.2.0
+  permission_handler: ^10.3.0
   sliding_up_panel: ^2.0.0+1
   geocoding: ^2.0.0
   url_launcher: ^6.0.10
   what3words: 3.1.0
   shared_preferences: 2.1.2
   firebase_messaging: ^14.6.3
+  device_info: ^2.0.2
 
 dev_dependencies:
   flutter_test:

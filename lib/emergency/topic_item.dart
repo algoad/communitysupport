@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:communitysupport/services/models.dart';
 import 'package:url_launcher/url_launcher.dart'; // import url_launcher
+import 'package:device_info/device_info.dart';
 
 class TopicItem extends StatelessWidget {
   final Topic topic;
 
   const TopicItem({Key? key, required this.topic}) : super(key: key);
 
-  void _launchURL(String? uri) async {
+  void _launchURL(String? uri, BuildContext context) async {
     if (uri != null) {
       Uri url = Uri.parse("tel:$uri");
-      // Uri url = Uri.parse(uri);
       if (await canLaunchUrl(url)) {
         await launchUrl(url);
       } else {
-        throw 'Could not launch $url';
+        final snackBar = SnackBar(content: Text('Could not launch $url'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
+    }
+  }
+
+  Future<bool> _isPhysicalDevice() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    return androidInfo.isPhysicalDevice;
+  }
+
+  Future<void> _launchOrShowSnackbar(String? uri, BuildContext context) async {
+    if (await _isPhysicalDevice()) {
+      _launchURL(uri, context);
+    } else {
+      const snackBar =
+          SnackBar(content: Text('Cannot perform this action on simulator'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -53,16 +70,18 @@ class TopicItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
                               Navigator.pop(context);
-                              _launchURL(topic.number);
+                              await _launchOrShowSnackbar(
+                                  topic.number, context);
                             },
                             child: const Text('Call'),
                           ),
                           InkWell(
-                            onTap: () {
+                            onTap: () async {
                               Navigator.pop(context);
-                              _launchURL(topic.website);
+                              await _launchOrShowSnackbar(
+                                  topic.website, context);
                             },
                             child: const Text('Open Website'),
                           ),
@@ -72,7 +91,7 @@ class TopicItem extends StatelessWidget {
                   },
                 );
               } else {
-                _launchURL(topic.number);
+                _launchOrShowSnackbar(topic.number, context);
               }
             },
             child: Column(

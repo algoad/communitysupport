@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:communitysupport/shared/shared.dart';
 import '../services/auth.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../services/models.dart';
 import 'floating_box.dart';
 
@@ -21,25 +22,36 @@ class MyEmergencyState extends State<EmergencyScreen> {
   final Set<Marker> _markers = {};
   String _currentAddress = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _requestLocationPermission();
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     _getCurrentUserLocation();
+  }
+
+  _requestLocationPermission() async {
+    PermissionStatus permissionStatus =
+        await Permission.locationWhenInUse.status;
+
+    if (permissionStatus.isDenied) {
+      permissionStatus = await Permission.locationWhenInUse.request();
+      if (permissionStatus.isDenied) {
+        print("User denied location permission.");
+      }
+    }
   }
 
   Future<void> _getCurrentUserLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (serviceEnabled) {
       LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return Future.error('Location permissions are denied');
-        }
-      }
-
       if (permission == LocationPermission.deniedForever) {
         return Future.error(
-            'Location permissions are permanetly denined, we cannot request');
+            'Location permissions are permanently denied, we cannot request');
       }
       Position currentPosition = await Geolocator.getCurrentPosition();
       _updateAddress(currentPosition.latitude, currentPosition.longitude);
