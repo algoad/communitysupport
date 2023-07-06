@@ -53,22 +53,31 @@ Map<String, dynamic> _$QuizToJson(Quiz instance) => <String, dynamic>{
     };
 
 Topic _$TopicFromJson(Map<String, dynamic> json) => Topic(
-      id: json['id'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      img: json['img'] as String? ?? 'default.png',
-      quizzes: (json['quizzes'] as List<dynamic>?)
-              ?.map((e) => Quiz.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+      title: json['title'] as String,
+      img: json['img'] as String,
+      number: json['number'] as String,
+      website: json['website'] as String?,
     );
 
 Map<String, dynamic> _$TopicToJson(Topic instance) => <String, dynamic>{
+      'title': instance.title,
+      'img': instance.img,
+      'number': instance.number,
+      'website': instance.website,
+    };
+
+Alert _$AlertFromJson(Map<String, dynamic> json) => Alert(
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      date: json['date'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$AlertToJson(Alert instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'description': instance.description,
-      'img': instance.img,
-      'quizzes': instance.quizzes,
+      'date': instance.date,
     };
 
 Report _$ReportFromJson(Map<String, dynamic> json) => Report(

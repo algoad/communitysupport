@@ -1,13 +1,11 @@
-import 'package:communitysupport/about/about.dart';
-import 'package:communitysupport/profile/profile.dart';
+import 'package:communitysupport/alerts/alerts.dart';
 import 'package:communitysupport/login/login.dart';
-import 'package:communitysupport/topics/topics.dart';
 import 'package:communitysupport/home/home.dart';
+import 'package:communitysupport/emergency/emergency.dart';
 
 var appRoutes = {
   '/': (context) => const HomeScreen(),
   '/login': (context) => const LoginScreen(),
-  '/topics': (context) => const TopicsScreen(),
-  '/profile': (context) => const ProfileScreen(),
-  '/about': (context) => const AboutScreen(),
+  '/emergency': (context) => const EmergencyScreen(),
+  '/alerts': (context) => const AlertsScreen(),
 };

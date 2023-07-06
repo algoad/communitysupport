@@ -2,47 +2,64 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BottomNavBar extends StatelessWidget {
-  const BottomNavBar({super.key});
+  final int currentPage;
+
+  const BottomNavBar({Key? key, required this.currentPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
+    return Material(
+      elevation:
+          10.0, // Set the elevation, adjust to achieve desired shadow effect
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(
-              FontAwesomeIcons.graduationCap,
-              size: 20,
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 4),
+              child: Icon(
+                FontAwesomeIcons.phone,
+                size: 20,
+                color: Color.fromRGBO(4, 15, 57, 1),
+              ),
             ),
-            label: 'Topics',
+            label: 'EMERGENCY',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              FontAwesomeIcons.graduationCap,
-              size: 20,
+            icon: Padding(
+              padding: EdgeInsets.only(bottom: 4),
+              child: Icon(
+                FontAwesomeIcons.solidBell,
+                size: 20,
+                color: Color.fromRGBO(4, 15, 57, 1),
+              ),
             ),
-            label: 'About',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              FontAwesomeIcons.graduationCap,
-              size: 20,
-            ),
-            label: 'Profile',
+            label: 'ALERTS',
           ),
         ],
-        fixedColor: Colors.deepPurple[200],
+        currentIndex: currentPage,
+        selectedItemColor: const Color.fromRGBO(4, 15, 57, 1),
+        unselectedItemColor: const Color.fromRGBO(220, 220, 220, 1),
+        selectedIconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         onTap: (int idx) {
+          if (idx == currentPage) {
+            return;
+          }
           switch (idx) {
             case 0:
-              // do nothing
+              Navigator.pushReplacementNamed(context, '/emergency');
               break;
             case 1:
-              Navigator.pushNamed(context, '/about');
-              break;
-            case 2:
-              Navigator.pushNamed(context, '/profile');
+              Navigator.pushReplacementNamed(context, '/alerts');
               break;
           }
-        });
+        },
+      ),
+    );
   }
 }

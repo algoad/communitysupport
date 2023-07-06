@@ -37,14 +37,26 @@ dependencies:
   firebase_core: ^2.13.1
   cloud_firestore: ^4.8.0
   firebase_auth: ^4.6.2
-  google_fonts: ^5.0.0
+  google_fonts: ^4.0.4
   font_awesome_flutter: ^10.4.0
-  google_sign_in: ^5.4.4
-  sign_in_with_apple: ^4.3.0
+  google_sign_in: ^6.1.4
   crypto: ^3.0.3
   json_annotation: ^4.8.1
   provider: ^6.0.5
   rxdart: ^0.27.7
+  google_maps_flutter: ^2.0.6
+  geolocator: ^9.0.2
+  permission_handler: ^10.3.0
+  sliding_up_panel: ^2.0.0+1
+  geocoding: ^2.0.0
+  url_launcher: ^6.0.10
+  what3words: 3.1.0
+  shared_preferences: ^2.2.0
+  firebase_messaging: ^14.6.3
+  device_info: ^2.0.2
+  connectivity_plus: ^4.0.1
+  fluttertoast: ^8.0.8
+  flutter_local_notifications: ^15.0.1
 
 dev_dependencies:
   flutter_test:
