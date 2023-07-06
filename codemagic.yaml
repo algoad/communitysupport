@@ -34,7 +34,7 @@ workflows:
       google_play:
         credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT
         track: internal
-        submit_as_draft: true
+        submit_as_draft: false
   android-workflow:
     name: Android Workflow
     instance_type: mac_mini_m1

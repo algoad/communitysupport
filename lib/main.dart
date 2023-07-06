@@ -65,7 +65,7 @@ class _AppState extends State<App> {
 
         if (snapshot.connectionState == ConnectionState.done) {
           FirebaseApi().initNotifications();
-          FirebaseApi().initLocalNotifications();
+          // FirebaseApi().initLocalNotifications();
 
           return StreamProvider(
             create: (_) => FirestoreService().streamReport(),
