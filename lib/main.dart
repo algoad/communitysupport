@@ -1,5 +1,6 @@
 import 'package:communitysupport/routes.dart';
 import 'package:communitysupport/services/firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:communitysupport/services/models.dart';
@@ -7,6 +8,8 @@ import 'package:communitysupport/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,10 +65,13 @@ class _AppState extends State<App> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
+          FirebaseApi().initNotifications(); // Call initNotifications here
+
           return StreamProvider(
             create: (_) => FirestoreService().streamReport(),
             initialData: Report(),
             child: MaterialApp(
+              navigatorKey: navigatorKey,
               theme: appTheme,
               routes: appRoutes,
             ),
@@ -115,5 +121,39 @@ class PermissionRequesterState extends State<PermissionRequester> {
   @override
   Widget build(BuildContext context) {
     return Container(); // Replace with your own widget
+  }
+}
+
+Future<void> handleBackgroundMessage(RemoteMessage message) async {
+  print("Title: ${message.notification?.title}");
+  print("Body: ${message.notification?.body}");
+  print("Payload: ${message.data}");
+}
+
+void handleMessage(RemoteMessage? message) {
+  if (message == null) return;
+  navigatorKey.currentState?.pushNamed('/alerts');
+}
+
+Future initiPushNotifications() async {
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
+  FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+}
+
+class FirebaseApi {
+  final firebaseMessaging = FirebaseMessaging.instance;
+
+  Future<void> initNotifications() async {
+    await firebaseMessaging.requestPermission();
+    // final fcmToken = await firebaseMessaging.getToken();
+    // print('TOKEN: $fcmToken');
+    // FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    initiPushNotifications();
   }
 }
