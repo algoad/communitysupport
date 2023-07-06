@@ -1,7 +1,9 @@
 import 'package:communitysupport/emergency/topic_item.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -105,6 +107,22 @@ class MyEmergencyState extends State<EmergencyScreen> {
         website: 'https://www.csgnsw.org.au/report-something');
     List<Topic> topics = [topic1, topic2];
 
+    Future<void> checkConnectivity() async {
+      var connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.none) {
+        Fluttertoast.showToast(
+          msg: "You need internet connection to continue",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {
+        await AuthService().signOut();
+        if (mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -113,13 +131,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
         actions: <Widget>[
           TextButton(
             child: const Text('Logout', style: TextStyle(color: Colors.white)),
-            onPressed: () async {
-              await AuthService().signOut();
-              if (mounted) {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/', (route) => false);
-              }
-            },
+            onPressed: () => checkConnectivity(),
           ),
         ],
       ),

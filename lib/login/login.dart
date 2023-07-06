@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../services/auth.dart';
 import '../services/firestore.dart';
@@ -17,6 +21,41 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+
+  Future<bool> _isPhysicalDevice() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    return androidInfo.isPhysicalDevice;
+  }
+
+  void _launchOrShowSnackbar(String? uri, BuildContext context) {
+    _isPhysicalDevice().then((isPhysicalDevice) {
+      if (isPhysicalDevice) {
+        _launchURL(uri, context);
+      } else {
+        const snackBar =
+            SnackBar(content: Text('Cannot perform this action on simulator'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
+  }
+
+  Future<void> _launchURL(String? uri, BuildContext context) {
+    final completer = Completer<void>();
+    if (uri != null) {
+      Uri url = Uri.parse("tel:$uri");
+      canLaunchUrl(url).then((canLaunch) {
+        if (canLaunch) {
+          launchUrl(url).then((_) => completer.complete());
+        } else {
+          completer.completeError('Could not launch $url');
+        }
+      });
+    } else {
+      completer.completeError('Uri was null');
+    }
+    return completer.future;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,19 +151,39 @@ class LoginScreenState extends State<LoginScreen> {
                   const Padding(
                     padding: EdgeInsets.all(10.0), // adjust the value as needed
                   ),
-                  LoginButton(
-                    icon: FontAwesomeIcons.arrowRight,
-                    text: 'Login',
-                    loginMethod: () async {
-                      if (_formKey.currentState!.validate()) {
-                        var userData = context.read<UserDataProvider>();
-                        await AuthService().anonLogin();
-                        await FirestoreService().updateUserData(
-                            userData.name, userData.phoneNumber);
-                      }
-                    },
-                    color: Colors.deepPurple,
-                  )
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly, // Adjust this as needed.
+                    children: <Widget>[
+                      Expanded(
+                        child: LoginButton(
+                          icon: FontAwesomeIcons.arrowRight,
+                          text: 'Login',
+                          loginMethod: () async {
+                            if (_formKey.currentState!.validate()) {
+                              var userData = context.read<UserDataProvider>();
+                              await AuthService().anonLogin();
+                              await FirestoreService().updateUserData(
+                                  userData.name, userData.phoneNumber);
+                            }
+                          },
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      const SizedBox(
+                          width: 10.0), // Add a SizedBox for spacing.
+                      Expanded(
+                        child: LoginButton(
+                          icon: FontAwesomeIcons.phone,
+                          text: 'Call CHS',
+                          loginMethod: () async {
+                            _launchOrShowSnackbar("0432577179", context);
+                          },
+                          color: Colors.deepPurple,
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
