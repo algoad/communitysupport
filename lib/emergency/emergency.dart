@@ -1,5 +1,6 @@
 import 'package:communitysupport/emergency/topic_item.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -128,6 +129,12 @@ class MyEmergencyState extends State<EmergencyScreen> {
             onMapCreated: _onMapCreated,
             markers: _markers,
             myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+              Factory<OneSequenceGestureRecognizer>(
+                () => EagerGestureRecognizer(),
+              ),
+            }, // Enable dragging
             initialCameraPosition: CameraPosition(
               target: _center,
               zoom: 14.0,
