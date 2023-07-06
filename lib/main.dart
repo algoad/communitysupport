@@ -1,4 +1,5 @@
 import 'package:communitysupport/routes.dart';
+import 'package:communitysupport/services/firebase.dart';
 import 'package:communitysupport/services/firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -125,35 +126,14 @@ class PermissionRequesterState extends State<PermissionRequester> {
 }
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print("Title: ${message.notification?.title}");
-  print("Body: ${message.notification?.body}");
-  print("Payload: ${message.data}");
+  if (kDebugMode) {
+    print("Title: ${message.notification?.title}");
+    print("Body: ${message.notification?.body}");
+    print("Payload: ${message.data}");
+  }
 }
 
 void handleMessage(RemoteMessage? message) {
   if (message == null) return;
   navigatorKey.currentState?.pushNamed('/alerts');
-}
-
-Future initiPushNotifications() async {
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
-  FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-}
-
-class FirebaseApi {
-  final firebaseMessaging = FirebaseMessaging.instance;
-
-  Future<void> initNotifications() async {
-    await firebaseMessaging.requestPermission();
-    // final fcmToken = await firebaseMessaging.getToken();
-    // print('TOKEN: $fcmToken');
-    // FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
-    initiPushNotifications();
-  }
 }
