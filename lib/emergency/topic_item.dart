@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:communitysupport/services/models.dart';
 import 'package:url_launcher/url_launcher.dart'; // import url_launcher
@@ -8,16 +10,32 @@ class TopicItem extends StatelessWidget {
 
   const TopicItem({Key? key, required this.topic}) : super(key: key);
 
-  void _launchURL(String? uri, BuildContext context) async {
+  Future<void> _launchURL(String? uri, BuildContext context, bool isWebsite) {
+    final completer = Completer<void>();
     if (uri != null) {
-      Uri url = Uri.parse("tel:$uri");
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
+      if (isWebsite) {
+        Uri url = Uri.parse("web:$uri");
+        canLaunchUrl(url).then((canLaunch) {
+          if (canLaunch) {
+            launchUrl(url).then((_) => completer.complete());
+          } else {
+            completer.completeError('Could not launch $url');
+          }
+        });
       } else {
-        final snackBar = SnackBar(content: Text('Could not launch $url'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Uri url = Uri.parse("tel:$uri");
+        canLaunchUrl(url).then((canLaunch) {
+          if (canLaunch) {
+            launchUrl(url).then((_) => completer.complete());
+          } else {
+            completer.completeError('Could not launch $url');
+          }
+        });
       }
+    } else {
+      completer.completeError('Uri was null');
     }
+    return completer.future;
   }
 
   Future<bool> _isPhysicalDevice() async {
@@ -26,14 +44,17 @@ class TopicItem extends StatelessWidget {
     return androidInfo.isPhysicalDevice;
   }
 
-  Future<void> _launchOrShowSnackbar(String? uri, BuildContext context) async {
-    if (await _isPhysicalDevice()) {
-      _launchURL(uri, context);
-    } else {
-      const snackBar =
-          SnackBar(content: Text('Cannot perform this action on simulator'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
+  void _launchOrShowSnackbar(
+      String? uri, BuildContext context, bool isWebsite) {
+    _isPhysicalDevice().then((isPhysicalDevice) {
+      if (isPhysicalDevice) {
+        _launchURL(uri, context, isWebsite);
+      } else {
+        const snackBar =
+            SnackBar(content: Text('Cannot perform this action on simulator'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
   }
 
   @override
@@ -43,14 +64,14 @@ class TopicItem extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0), // corner radius
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.grey.withOpacity(0.2),
+          //     spreadRadius: 1,
+          //     blurRadius: 3,
+          //     offset: const Offset(0, 2), // changes position of shadow
+          //   ),
+          // ],
         ),
         child: Card(
           clipBehavior: Clip.antiAlias,
@@ -64,7 +85,7 @@ class TopicItem extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('Choose an Option'),
+                      title: const Text('Call or make a report'),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,18 +93,18 @@ class TopicItem extends StatelessWidget {
                           InkWell(
                             onTap: () async {
                               Navigator.pop(context);
-                              await _launchOrShowSnackbar(
-                                  topic.number, context);
+                              _launchOrShowSnackbar(
+                                  topic.number, context, false);
                             },
                             child: const Text('Call'),
                           ),
                           InkWell(
                             onTap: () async {
                               Navigator.pop(context);
-                              await _launchOrShowSnackbar(
-                                  topic.website, context);
+                              _launchOrShowSnackbar(
+                                  topic.website, context, true);
                             },
-                            child: const Text('Open Website'),
+                            child: const Text('Report incident'),
                           ),
                         ],
                       ),
@@ -91,7 +112,7 @@ class TopicItem extends StatelessWidget {
                   },
                 );
               } else {
-                _launchOrShowSnackbar(topic.number, context);
+                _launchOrShowSnackbar(topic.number, context, false);
               }
             },
             child: Column(
@@ -101,9 +122,12 @@ class TopicItem extends StatelessWidget {
                   flex: 2,
                   child: Container(
                     color: const Color.fromARGB(255, 30, 50, 97),
-                    child: Image.asset(
-                      'assets/covers/${topic.img}',
-                      fit: BoxFit.contain,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Image.asset(
+                        'assets/covers/${topic.img}',
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
@@ -112,7 +136,8 @@ class TopicItem extends StatelessWidget {
                   child: Container(
                     color: const Color.fromARGB(255, 30, 50, 97),
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 5, left: 10, right: 10),
                       child: Center(
                         child: Text(
                           topic.title,

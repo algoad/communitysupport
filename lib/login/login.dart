@@ -1,4 +1,6 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,7 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: Colors.white,
         padding: const EdgeInsets.all(30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -37,8 +40,30 @@ class LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   TextFormField(
                     initialValue: context.watch<UserDataProvider>().name,
+                    cursorColor: const Color.fromRGBO(
+                        29, 45, 91, 1), // Set RGB color for the cursor
+                    style: const TextStyle(
+                      color: Color.fromRGBO(
+                          29, 45, 91, 1), // Set RGB color for the entered text
+                    ),
                     decoration: const InputDecoration(
                       hintText: 'Enter your full name',
+                      hintStyle: TextStyle(
+                        color: Color.fromRGBO(
+                            29, 45, 91, 1), // Set RGB color for the hint text
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(29, 45, 91,
+                              1), // This color will be used when the TextField is enabled.
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(29, 45, 91,
+                              1), // This color will be used when the TextField is selected.
+                        ),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -50,9 +75,32 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                     initialValue: context.watch<UserDataProvider>().phoneNumber,
+                    cursorColor: const Color.fromRGBO(
+                        29, 45, 91, 1), // Set RGB color for the cursor
+                    style: const TextStyle(
+                      color: Color.fromRGBO(
+                          29, 45, 91, 1), // Set RGB color for the entered text
+                    ),
                     decoration: const InputDecoration(
                       hintText: 'Enter your mobile number',
+                      hintStyle: TextStyle(
+                        color: Color.fromRGBO(
+                            29, 45, 91, 1), // Set RGB color for the hint text
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(29, 45, 91,
+                              1), // This color will be used when the TextField is enabled.
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromRGBO(29, 45, 91,
+                              1), // This color will be used when the TextField is selected.
+                        ),
+                      ),
                     ),
+
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your mobile number';
@@ -101,6 +149,19 @@ class LoginButton extends StatelessWidget {
     required this.loginMethod,
   }) : super(key: key);
 
+  Future<void> checkConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      Fluttertoast.showToast(
+        msg: "You need internet connection to continue",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+    } else {
+      loginMethod();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -112,7 +173,8 @@ class LoginButton extends StatelessWidget {
           size: 20,
         ),
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(color),
+          backgroundColor:
+              MaterialStateProperty.all(const Color.fromRGBO(29, 45, 91, 1)),
           padding: MaterialStateProperty.all(
             const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           ),
@@ -122,7 +184,7 @@ class LoginButton extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () => loginMethod(),
+        onPressed: () => checkConnectivity(),
         label: Text(text, textAlign: TextAlign.center),
       ),
     );

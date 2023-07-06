@@ -1,5 +1,6 @@
 import 'package:communitysupport/routes.dart';
 import 'package:communitysupport/services/firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:communitysupport/services/models.dart';
 import 'package:communitysupport/theme.dart';
@@ -48,7 +49,9 @@ class _AppState extends State<App> {
         // Check for errors
 
         if (snapshot.hasError) {
-          print(snapshot.error?.toString());
+          if (kDebugMode) {
+            print(snapshot.error?.toString());
+          }
           return Directionality(
             textDirection: TextDirection.ltr,
             child: Center(
@@ -102,7 +105,9 @@ class PermissionRequesterState extends State<PermissionRequester> {
     if (permissionStatus.isDenied) {
       permissionStatus = await Permission.locationWhenInUse.request();
       if (permissionStatus.isDenied) {
-        print("User denied location permission.");
+        if (kDebugMode) {
+          print("User denied location permission.");
+        }
       }
     }
   }

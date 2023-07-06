@@ -1,4 +1,5 @@
 import 'package:communitysupport/emergency/topic_item.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -40,7 +41,9 @@ class MyEmergencyState extends State<EmergencyScreen> {
     if (permissionStatus.isDenied) {
       permissionStatus = await Permission.locationWhenInUse.request();
       if (permissionStatus.isDenied) {
-        print("User denied location permission.");
+        if (kDebugMode) {
+          print("User denied location permission.");
+        }
       }
     }
   }
@@ -98,14 +101,14 @@ class MyEmergencyState extends State<EmergencyScreen> {
         title: "Contact security",
         img: "csg.png",
         number: "0432577178",
-        website: 'www.google.com');
+        website: 'https://flutter.dev');
     List<Topic> topics = [topic1, topic2];
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 30, 50, 97),
-        title: const Text('Emergency'),
+        title: const Text('Community Safe'),
         actions: <Widget>[
           TextButton(
             child: const Text('Logout', style: TextStyle(color: Colors.white)),
@@ -124,6 +127,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
           GoogleMap(
             onMapCreated: _onMapCreated,
             markers: _markers,
+            myLocationButtonEnabled: false,
             initialCameraPosition: CameraPosition(
               target: _center,
               zoom: 14.0,
