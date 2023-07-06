@@ -14,7 +14,7 @@ class TopicItem extends StatelessWidget {
     final completer = Completer<void>();
     if (uri != null) {
       if (isWebsite) {
-        Uri url = Uri.parse("web:$uri");
+        Uri url = Uri.parse(uri);
         canLaunchUrl(url).then((canLaunch) {
           if (canLaunch) {
             launchUrl(url).then((_) => completer.complete());

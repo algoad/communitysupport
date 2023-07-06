@@ -102,7 +102,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
         title: "Contact security",
         img: "csg.png",
         number: "0432577178",
-        website: 'https://flutter.dev');
+        website: 'https://www.csgnsw.org.au/report-something');
     List<Topic> topics = [topic1, topic2];
 
     return Scaffold(
