@@ -5,11 +5,26 @@ class AlertItem extends StatelessWidget {
   final Alert alert;
   const AlertItem({Key? key, required this.alert}) : super(key: key);
 
+  List<Widget> getParagraphs(String text) {
+    return text.split('\\n').expand((paragraph) {
+      return [
+        Text(
+          paragraph,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+        const SizedBox(height: 16),
+      ];
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.blue,
+        color: Colors.deepPurple,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -23,10 +38,7 @@ class AlertItem extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(alert.description.toString()),
-              ),
+              ...getParagraphs(alert.description),
             ],
           ),
         ),

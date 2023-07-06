@@ -45,7 +45,7 @@ class AlertsScreenState extends State<AlertsScreen> {
                         return Container(
                           height: MediaQuery.of(context).size.height,
                           decoration: const BoxDecoration(
-                            color: Colors.blueGrey,
+                            color: Colors.deepPurple,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(24.0),
                               topRight: Radius.circular(24.0),
