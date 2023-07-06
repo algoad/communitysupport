@@ -114,35 +114,31 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                   TextFormField(
                     initialValue: context.watch<UserDataProvider>().phoneNumber,
-                    cursorColor: const Color.fromRGBO(
-                        29, 45, 91, 1), // Set RGB color for the cursor
-                    style: const TextStyle(
-                      color: Color.fromRGBO(
-                          29, 45, 91, 1), // Set RGB color for the entered text
-                    ),
+                    cursorColor: const Color.fromRGBO(29, 45, 91, 1),
+                    style:
+                        const TextStyle(color: Color.fromRGBO(29, 45, 91, 1)),
                     decoration: const InputDecoration(
                       hintText: 'Enter your mobile number',
-                      hintStyle: TextStyle(
-                        color: Color.fromRGBO(
-                            29, 45, 91, 1), // Set RGB color for the hint text
-                      ),
+                      hintStyle:
+                          TextStyle(color: Color.fromRGBO(29, 45, 91, 1)),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromRGBO(29, 45, 91,
-                              1), // This color will be used when the TextField is enabled.
-                        ),
+                        borderSide:
+                            BorderSide(color: Color.fromRGBO(29, 45, 91, 1)),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color.fromRGBO(29, 45, 91,
-                              1), // This color will be used when the TextField is selected.
-                        ),
+                        borderSide:
+                            BorderSide(color: Color.fromRGBO(29, 45, 91, 1)),
                       ),
                     ),
-
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your mobile number';
+                      }
+                      // Define a basic pattern for mobile numbers. This can be adjusted.
+                      Pattern pattern = r'^(?:[+0]9)?[0-9]{10}$';
+                      RegExp regex = RegExp(pattern as String);
+                      if (!regex.hasMatch(value)) {
+                        return 'Please enter a valid mobile number';
                       }
                       context.read<UserDataProvider>().phoneNumber = value;
                       return null;
