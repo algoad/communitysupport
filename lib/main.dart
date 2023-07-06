@@ -1,7 +1,6 @@
 import 'package:communitysupport/routes.dart';
 import 'package:communitysupport/services/firebase.dart';
 import 'package:communitysupport/services/firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:communitysupport/services/models.dart';
@@ -67,6 +66,7 @@ class _AppState extends State<App> {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           FirebaseApi().initNotifications(); // Call initNotifications here
+          FirebaseApi().initLocalNotifications();
 
           return StreamProvider(
             create: (_) => FirestoreService().streamReport(),
@@ -123,17 +123,4 @@ class PermissionRequesterState extends State<PermissionRequester> {
   Widget build(BuildContext context) {
     return Container(); // Replace with your own widget
   }
-}
-
-Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  if (kDebugMode) {
-    print("Title: ${message.notification?.title}");
-    print("Body: ${message.notification?.body}");
-    print("Payload: ${message.data}");
-  }
-}
-
-void handleMessage(RemoteMessage? message) {
-  if (message == null) return;
-  navigatorKey.currentState?.pushNamed('/alerts');
 }
