@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import '../emergency/emergency.dart';
 import '../services/auth.dart';
 import '../services/firestore.dart';
 import '../services/models.dart';
@@ -101,28 +101,23 @@ class LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   TextFormField(
                     initialValue: context.watch<UserDataProvider>().name,
-                    cursorColor: const Color.fromRGBO(
-                        29, 45, 91, 1), // Set RGB color for the cursor
+                    cursorColor: const Color.fromRGBO(29, 45, 91, 1),
                     style: const TextStyle(
-                      color: Color.fromRGBO(
-                          29, 45, 91, 1), // Set RGB color for the entered text
+                      color: Color.fromRGBO(29, 45, 91, 1),
                     ),
                     decoration: const InputDecoration(
                       hintText: 'Enter your full name',
                       hintStyle: TextStyle(
-                        color: Color.fromRGBO(
-                            29, 45, 91, 1), // Set RGB color for the hint text
+                        color: Color.fromRGBO(29, 45, 91, 1),
                       ),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color.fromRGBO(29, 45, 91,
-                              1), // This color will be used when the TextField is enabled.
+                          color: Color.fromRGBO(29, 45, 91, 1),
                         ),
                       ),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color.fromRGBO(29, 45, 91,
-                              1), // This color will be used when the TextField is selected.
+                          color: Color.fromRGBO(29, 45, 91, 1),
                         ),
                       ),
                     ),
@@ -169,37 +164,13 @@ class LoginScreenState extends State<LoginScreen> {
                   const Padding(
                     padding: EdgeInsets.all(10.0), // adjust the value as needed
                   ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromRGBO(29, 45, 91, 1)),
-                      padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 10),
-                      ),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20), // border radius
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      // Put the code you want to execute when this button is pressed here.
-                    },
-                    child: const Text(
-                      'Continue Without Logging In',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment:
                         MainAxisAlignment.spaceEvenly, // Adjust this as needed.
                     children: <Widget>[
                       Expanded(
                         child: LoginButton(
-                          icon: FontAwesomeIcons.arrowRight,
+                          icon: FontAwesomeIcons.rightToBracket,
                           text: 'Login',
                           shouldCheckConnectivity: true,
                           loginMethod: () async {
@@ -213,8 +184,7 @@ class LoginScreenState extends State<LoginScreen> {
                           color: Colors.deepPurple,
                         ),
                       ),
-                      const SizedBox(
-                          width: 10.0), // Add a SizedBox for spacing.
+                      const SizedBox(width: 10.0),
                       Expanded(
                         child: LoginButton(
                           icon: FontAwesomeIcons.phone,
@@ -228,7 +198,22 @@ class LoginScreenState extends State<LoginScreen> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 10.0), // Add a SizedBox for spacing.
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Expanded(
+                        child: LoginButton(
+                          icon: FontAwesomeIcons.arrowRight,
+                          text: 'Continue without logging in',
+                          shouldCheckConnectivity: false,
+                          loginMethod: () async {
+                            return const EmergencyScreen();
+                          },
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
