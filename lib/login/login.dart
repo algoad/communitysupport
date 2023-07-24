@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info/device_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,6 +24,12 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _requestLocationPermission();
+  }
+
   Future<bool> _isPhysicalDevice() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -38,6 +46,20 @@ class LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     });
+  }
+
+  _requestLocationPermission() async {
+    PermissionStatus permissionStatus =
+        await Permission.locationWhenInUse.status;
+
+    if (permissionStatus.isDenied) {
+      permissionStatus = await Permission.locationWhenInUse.request();
+      if (permissionStatus.isDenied) {
+        if (kDebugMode) {
+          print("User denied location permission.");
+        }
+      }
+    }
   }
 
   Future<void> _launchURL(String? uri, BuildContext context) {
@@ -147,6 +169,30 @@ class LoginScreenState extends State<LoginScreen> {
                   const Padding(
                     padding: EdgeInsets.all(10.0), // adjust the value as needed
                   ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          const Color.fromRGBO(29, 45, 91, 1)),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 10),
+                      ),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20), // border radius
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      // Put the code you want to execute when this button is pressed here.
+                    },
+                    child: const Text(
+                      'Continue Without Logging In',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment:
                         MainAxisAlignment.spaceEvenly, // Adjust this as needed.
@@ -155,6 +201,7 @@ class LoginScreenState extends State<LoginScreen> {
                         child: LoginButton(
                           icon: FontAwesomeIcons.arrowRight,
                           text: 'Login',
+                          shouldCheckConnectivity: true,
                           loginMethod: () async {
                             if (_formKey.currentState!.validate()) {
                               var userData = context.read<UserDataProvider>();
@@ -172,6 +219,7 @@ class LoginScreenState extends State<LoginScreen> {
                         child: LoginButton(
                           icon: FontAwesomeIcons.phone,
                           text: 'Call CHS',
+                          shouldCheckConnectivity: false,
                           loginMethod: () async {
                             _launchOrShowSnackbar("0432577179", context);
                           },
@@ -180,6 +228,7 @@ class LoginScreenState extends State<LoginScreen> {
                       )
                     ],
                   ),
+                  const SizedBox(height: 10.0), // Add a SizedBox for spacing.
                 ],
               ),
             ),
@@ -194,6 +243,7 @@ class LoginButton extends StatelessWidget {
   final Color color;
   final IconData icon;
   final String text;
+  final bool shouldCheckConnectivity;
   final Function loginMethod;
 
   const LoginButton({
@@ -202,6 +252,7 @@ class LoginButton extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.loginMethod,
+    required this.shouldCheckConnectivity,
   }) : super(key: key);
 
   Future<void> checkConnectivity() async {
@@ -239,7 +290,14 @@ class LoginButton extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () => checkConnectivity(),
+        onPressed: () => {
+          if (shouldCheckConnectivity)
+            {
+              checkConnectivity(),
+            }
+          else
+            {loginMethod()}
+        },
         label: Text(text, textAlign: TextAlign.center),
       ),
     );

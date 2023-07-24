@@ -9,7 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:communitysupport/shared/shared.dart';
 import '../services/auth.dart';
-import 'package:permission_handler/permission_handler.dart';
 import '../services/models.dart';
 import 'floating_box.dart';
 
@@ -29,26 +28,11 @@ class MyEmergencyState extends State<EmergencyScreen> {
   @override
   void initState() {
     super.initState();
-    _requestLocationPermission();
   }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     _getCurrentUserLocation();
-  }
-
-  _requestLocationPermission() async {
-    PermissionStatus permissionStatus =
-        await Permission.locationWhenInUse.status;
-
-    if (permissionStatus.isDenied) {
-      permissionStatus = await Permission.locationWhenInUse.request();
-      if (permissionStatus.isDenied) {
-        if (kDebugMode) {
-          print("User denied location permission.");
-        }
-      }
-    }
   }
 
   Future<void> _getCurrentUserLocation() async {
