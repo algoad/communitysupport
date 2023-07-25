@@ -3,12 +3,10 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:communitysupport/shared/shared.dart';
-import '../services/auth.dart';
 import '../services/models.dart';
 import 'floating_box.dart';
 
@@ -24,6 +22,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
   LatLng _center = const LatLng(-33.886, 151.27);
   final Set<Marker> _markers = {};
   String _currentAddress = '';
+  bool _locationDenied = false;
 
   @override
   void initState() {
@@ -39,7 +38,14 @@ class MyEmergencyState extends State<EmergencyScreen> {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (serviceEnabled) {
       LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.deniedForever) {
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever ||
+          permission == LocationPermission.unableToDetermine) {
+        setState(() {
+          _locationDenied = true;
+          _currentAddress =
+              "Your location services are off, we cannot get your location.";
+        });
         return Future.error(
             'Location permissions are permanently denied, we cannot request');
       }
@@ -58,9 +64,9 @@ class MyEmergencyState extends State<EmergencyScreen> {
         );
         _markers.add(
           Marker(
-            markerId: const MarkerId('1'), // Unique id for marker
-            position: LatLng(currentPosition.latitude,
-                currentPosition.longitude), // lat and long for the marker
+            markerId: const MarkerId('1'),
+            position:
+                LatLng(currentPosition.latitude, currentPosition.longitude),
           ),
         );
       });
@@ -73,9 +79,19 @@ class MyEmergencyState extends State<EmergencyScreen> {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(latitude, longitude);
     Placemark place = placemarks[0];
-    setState(() {
-      _currentAddress = "${place.street}, ${place.locality}, ${place.country}";
-    });
+
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) {
+      setState(() {
+        _currentAddress =
+            "Your location services are off, we cannot get your locations";
+      });
+    } else {
+      setState(() {
+        _currentAddress =
+            "Near: ${place.street}, ${place.locality}, ${place.country}";
+      });
+    }
   }
 
   @override
@@ -91,33 +107,17 @@ class MyEmergencyState extends State<EmergencyScreen> {
         website: 'https://www.csgnsw.org.au/report-something');
     List<Topic> topics = [topic1, topic2];
 
-    Future<void> checkConnectivity() async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.none) {
-        Fluttertoast.showToast(
-          msg: "You need internet connection to continue",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      } else {
-        await AuthService().signOut();
-        if (mounted) {
-          Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-        }
-      }
-    }
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 30, 50, 97),
         title: const Text('Community Safe'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Logout', style: TextStyle(color: Colors.white)),
-            onPressed: () => checkConnectivity(),
-          ),
-        ],
+        // actions: <Widget>[
+        //   TextButton(
+        //     child: const Text('Logout', style: TextStyle(color: Colors.white)),
+        //     onPressed: () => checkConnectivity(),
+        //   ),
+        // ],
       ),
       body: Stack(
         children: [
@@ -130,7 +130,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
               Factory<OneSequenceGestureRecognizer>(
                 () => EagerGestureRecognizer(),
               ),
-            }, // Enable dragging
+            },
             initialCameraPosition: CameraPosition(
               target: _center,
               zoom: 14.0,
@@ -144,6 +144,7 @@ class MyEmergencyState extends State<EmergencyScreen> {
             children: topics.map((topic) => TopicItem(topic: topic)).toList(),
           ),
           FloatingBox(
+            locationDenied: _locationDenied,
             address: _currentAddress,
           ),
         ],

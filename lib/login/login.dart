@@ -9,7 +9,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../emergency/emergency.dart';
 import '../services/auth.dart';
 import '../services/firestore.dart';
 import '../services/models.dart';
@@ -52,9 +51,9 @@ class LoginScreenState extends State<LoginScreen> {
     PermissionStatus permissionStatus =
         await Permission.locationWhenInUse.status;
 
-    if (permissionStatus.isDenied) {
+    if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
       permissionStatus = await Permission.locationWhenInUse.request();
-      if (permissionStatus.isDenied) {
+      if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
         if (kDebugMode) {
           print("User denied location permission.");
         }
@@ -151,7 +150,6 @@ class LoginScreenState extends State<LoginScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your mobile number';
                       }
-                      // Define a basic pattern for mobile numbers. This can be adjusted.
                       Pattern pattern = r'^(?:[+0]9)?[0-9]{10}$';
                       RegExp regex = RegExp(pattern as String);
                       if (!regex.hasMatch(value)) {
@@ -162,11 +160,10 @@ class LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   const Padding(
-                    padding: EdgeInsets.all(10.0), // adjust the value as needed
+                    padding: EdgeInsets.all(10.0),
                   ),
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly, // Adjust this as needed.
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Expanded(
                         child: LoginButton(
@@ -204,10 +201,13 @@ class LoginScreenState extends State<LoginScreen> {
                       Expanded(
                         child: LoginButton(
                           icon: FontAwesomeIcons.arrowRight,
-                          text: 'Continue without logging in',
+                          text: 'Continue without saving details',
                           shouldCheckConnectivity: false,
                           loginMethod: () async {
-                            return const EmergencyScreen();
+                            if (mounted) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/emergency', (route) => false);
+                            }
                           },
                           color: Colors.deepPurple,
                         ),
@@ -271,7 +271,7 @@ class LoginButton extends StatelessWidget {
           ),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20), // border radius
+              borderRadius: BorderRadius.circular(20),
             ),
           ),
         ),

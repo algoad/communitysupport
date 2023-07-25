@@ -1,11 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class FloatingBox extends StatelessWidget {
   final String address;
+  final bool locationDenied;
 
   const FloatingBox({
     Key? key,
     required this.address,
+    required this.locationDenied,
   }) : super(key: key);
 
   @override
@@ -49,7 +53,7 @@ class FloatingBox extends StatelessWidget {
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        'Near: $address',
+                        address,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 16.0,
@@ -57,6 +61,38 @@ class FloatingBox extends StatelessWidget {
                           fontWeight: FontWeight.normal,
                         ),
                       ),
+                      if (locationDenied)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              PermissionStatus permissionStatus =
+                                  await Permission.locationWhenInUse.status;
+
+                              switch (permissionStatus) {
+                                case PermissionStatus.denied:
+                                  permissionStatus = await Permission
+                                      .locationWhenInUse
+                                      .request();
+                                  break;
+                                case PermissionStatus.permanentlyDenied:
+                                  openAppSettings();
+                                  break;
+                                default:
+                                  break;
+                              }
+
+                              if (kDebugMode) {
+                                print(
+                                    "Permission status after requesting: $permissionStatus");
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                            ),
+                            child: const Text('Allow location'),
+                          ),
+                        ),
                     ],
                   ),
                 ),

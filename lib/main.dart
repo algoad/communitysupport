@@ -2,11 +2,11 @@ import 'package:communitysupport/routes.dart';
 import 'package:communitysupport/services/firebase.dart';
 import 'package:communitysupport/services/firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:communitysupport/services/models.dart';
 import 'package:communitysupport/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
@@ -48,6 +48,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    const PermissionRequester();
   }
 
   @override
@@ -85,7 +86,6 @@ class _AppState extends State<App> {
           );
         }
 
-        // Otherwise, show something whilst waiting for initialization to complete
         return const Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
@@ -115,9 +115,9 @@ class PermissionRequesterState extends State<PermissionRequester> {
     PermissionStatus permissionStatus =
         await Permission.locationWhenInUse.status;
 
-    if (permissionStatus.isDenied) {
+    if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
       permissionStatus = await Permission.locationWhenInUse.request();
-      if (permissionStatus.isDenied) {
+      if (permissionStatus.isDenied || permissionStatus.isPermanentlyDenied) {
         if (kDebugMode) {
           print("User denied location permission.");
         }
