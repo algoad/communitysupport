@@ -21,3 +21,6 @@ Run this command to generate json objects
 `cd android` and `./gradlew clean build`
 
 `flutter run` to start project
+
+You can perform a clean reinstallation of all packages in your system cache:
+Flutter run cache repair
