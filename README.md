@@ -25,6 +25,12 @@ Run this command to generate json objects
 You can perform a clean reinstallation of all packages in your system cache:
 Flutter run cache repair
 
-# font subset” can’t be opened flutter
+# IOS
 
-Flutter build ios --no-tree-shake-icons
+`flutter build ios`
+
+## Common errors:
+
+### font subset” can’t be opened flutter
+
+`Flutter build ios --no-tree-shake-icons`
